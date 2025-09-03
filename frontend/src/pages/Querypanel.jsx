@@ -141,21 +141,28 @@ const QueryPanel = ({ employeeToken }) => {
     if (diffInMinutes % 60 > 0) timeString += `${diffInMinutes % 60} minute${diffInMinutes % 60 > 1 ? 's' : ''}`;
     return timeString.trim().replace(/,$/, '');
   };
+const token = localStorage.getItem('employee_token');
+const fetchInquiries = async () => {
+  setIsLoading(true);
+  try {
+    const response = await fetch(`${API_URL}/api/inquiries`, {
+      method: "GET",
+      headers: {
+        "X-Access-Token": token,           // <-- THIS IS THE FIX!
+        "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) throw new Error("Failed to fetch inquiries");
+    const data = await response.json();
+    setInquiries(data);
+  } catch (error) {
+    toast.error("Failed to load inquiries. Please try again later.");
+    setError(error.message);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
-  const fetchInquiries = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/api/inquiries`);
-      if (!response.ok) throw new Error("Failed to fetch inquiries");
-      const data = await response.json();
-      setInquiries(data);
-    } catch (error) {
-      toast.error("Failed to load inquiries. Please try again later.");
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => { fetchInquiries(); }, []);
 
