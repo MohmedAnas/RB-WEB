@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import toast, { Toaster } from 'react-hot-toast';
 import Typed from 'typed.js';
 import gsap from 'gsap';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Feedback = () => {
     const [formData, setFormData] = useState({
@@ -131,7 +132,7 @@ const Feedback = () => {
         const submissionPromise = new Promise(async (resolve, reject) => {
             console.log("Submitting feedback data:", formData);
             try {
-                const response = await fetch('http://localhost:5000/api/feedback', {
+                const response = await fetch(`${API_URL}/api/feedback`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
