@@ -8,6 +8,7 @@ const dispositionOptions = ["Dropped - Price", "Dropped - Requirement Unmatched"
 const statusOptions = ["Pending", "In Progress", "Completed", "Schedule", "Dropped"];
 const enquiryTypeOptions = ["Query", "Demo", "Renewal"];
 const dateOptions = ["Today", "Last Month", "Last 6 Months", "Last Year", "Custom"];
+const API_URL = import.meta.env.VITE_API_URL;
 
 const addDays = (date, days) => {
   const copy = new Date(date);
@@ -144,7 +145,7 @@ const QueryPanel = ({ employeeToken }) => {
   const fetchInquiries = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/inquiries");
+      const response = await fetch(`${API_URL}/api/inquiries`);
       if (!response.ok) throw new Error("Failed to fetch inquiries");
       const data = await response.json();
       setInquiries(data);
@@ -197,7 +198,7 @@ const QueryPanel = ({ employeeToken }) => {
   // ========= Save inquiry update to backend DB ===============
   const handleUpdate = async (updatedData) => {
     try {
-      await fetch(`http://localhost:5000/api/inquiries/${selectedInquiry.id}`, {
+      await fetch(`${API_URL}/api/inquiries/${selectedInquiry.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedData),
@@ -529,7 +530,7 @@ const QueryPanel = ({ employeeToken }) => {
                               onClick={async () => {
                                 setScheduleLoading(true);
                                 try {
-                                  await fetch("http://localhost:5000/api/schedule-meeting", {
+                                  await fetch(`${API_URL}/api/schedule-meeting`, {
                                     method: "POST",
                                     headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify({
