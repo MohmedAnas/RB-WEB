@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle, XCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast, { Toaster } from 'react-hot-toast';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const FreeTrial = () => {
     const [formData, setFormData] = useState({
@@ -82,7 +83,7 @@ const FreeTrial = () => {
         const submissionPromise = new Promise(async (resolve, reject) => {
             try {
                 // The frontend now makes a single fetch call to your own backend
-                const response = await fetch('http://localhost:5000/api/free-trial', {
+                const response = await fetch(`${API_URL}/api/free-trial`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData),
