@@ -15,6 +15,15 @@ import { MessageSquareText, ArrowRight, Book, Package, Receipt, ClipboardList, S
 
 gsap.registerPlugin(ScrollTrigger);
 
+const allowedTokens = [
+  "Super-token-739",
+  "Normal-token-139",
+  "Middle-token-239",
+  "Low-token-339"
+];
+
+
+
 const servicesData = [
   { icon: <Book size={48} />, title: "Financial Accounting", description: "Manage ledgers, budgets, multi-currency transactions, and create audit-ready financial statements.", page: '/financialaccounting' },
   { icon: <Package size={48} />, title: "Inventory Management", description: "Efficiently handle stock levels, reorder points, multiple locations, and track items with serial numbers or batches.", page: '/inventorymanagement' },
@@ -124,6 +133,23 @@ const plans = [
     },
 ];
 
+const handleAdminTokenSubmit = (e) => {
+    e.preventDefault();
+    if (!adminToken) {
+      setAdminError("Please enter your secret token.");
+      return;
+    }
+    if (!allowedTokens.includes(adminToken)) {
+      setAdminError("Invalid token, please try again.");
+      return;
+    }
+    localStorage.setItem("employee_token", adminToken);
+    setShowAdminModal(false);
+    setAdminError("");
+    setAdminToken("");
+    navigate("/querypanel");
+  };
+
 const allWebinars = [
     {
         title: "Trade Specific – Built for Builders: BUSY Software for Bricks & Aggregates Retailers",
@@ -164,6 +190,11 @@ const allWebinars = [
 ];
 
 const AboutUs = () => {
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [adminToken, setAdminToken] = useState("");
+  const [adminError, setAdminError] = useState("");
+  const navigate = useNavigate();
+  
     const typedEl = useRef(null);
     const heroSectionRef = useRef(null);
 
@@ -267,6 +298,48 @@ const AboutUs = () => {
 
   return (
     <div className="container mx-auto px-4 py-12 space-y-12">
+    {/* === QUERY PANEL ADMIN BUTTON, floated top-right, beside hamburger === */}
+      <button
+        onClick={() => setShowAdminModal(true)}
+        className="fixed top-5 right-24 z-50 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 transition"
+        title="Admin Query Panel"
+        style={{ minWidth: '48px' }}>
+        Query Panel
+      </button>
+
+      {/* === QUERY PANEL ADMIN MODAL === */}
+      {showAdminModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-xs text-center relative">
+            <button
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+              onClick={() => {
+                setShowAdminModal(false);
+                setAdminToken("");
+                setAdminError("");
+              }}
+              aria-label="Close"
+            >✕</button>
+            <h3 className="text-xl font-bold mb-4 text-indigo-700">Enquiry Management Access</h3>
+            <form onSubmit={handleAdminTokenSubmit}>
+              <input
+                type="password"
+                placeholder="Enter Secret Token"
+                className="w-full border p-2 rounded mb-2"
+                value={adminToken}
+                onChange={e => {
+                  setAdminToken(e.target.value);
+                  setAdminError("");
+                }}
+              />
+              {adminError && <div className="text-red-600 text-xs mb-2">{adminError}</div>}
+              <button className="w-full bg-indigo-600 text-white py-2 rounded mt-2 hover:bg-indigo-700 transition">
+                Access Panel
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
         {/* Company Header Section with Logo and Details */}
         <motion.section
             ref={heroSectionRef}
