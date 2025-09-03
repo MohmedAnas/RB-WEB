@@ -7,7 +7,25 @@ import 'dotenv/config';
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+const allowedOrigins = [
+  "https://your-netlify-domain.netlify.app", 
+  "http://localhost:3000",  // development (optional)
+  "http://127.0.0.1:3000"
+  // Add more if needed
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = `CORS policy: Origin ${origin} not allowed`;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 // Create Nodemailer transporter for Gmail
