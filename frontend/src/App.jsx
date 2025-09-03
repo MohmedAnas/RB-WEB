@@ -54,10 +54,10 @@ import QueryPanel from './pages/Querypanel.jsx';
 
 // TOKEN LIST (***Modify these for your employees***)
 const allowedTokens = [
-  '7fC2AbQxKD1xyz1',   // e.g. Employee 1
-  'TZpL9MwM5JP2lxy4',  // e.g. Employee 2
-  'ZPjkh78uyeskdy65',
-  'rrifyougjeien8948'
+  'Super-token-739',   // e.g. Employee 1
+  'Normal-token-139',  // e.g. Employee 2
+  'Middle-token-239',
+  'Low-token-339'
 ];
 
 const pageVariants = {
