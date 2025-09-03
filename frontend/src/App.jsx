@@ -68,10 +68,6 @@ const pageVariants = {
   },
 };
 
-  // Optional: store token to localStorage if you want access/tracking
-  localStorage.setItem("employee_token", token);
-  return <QueryPanel employeeToken={token} />;
-}
 
 // --- MAIN PAGE SYSTEM ---
 const MainApp = () => {
