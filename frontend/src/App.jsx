@@ -51,14 +51,8 @@ import ContactUs from './pages/ContactUs.jsx';
 
 // New import for the QueryPanel
 import QueryPanel from './pages/Querypanel.jsx';
+import AdminLogin from './components/AdminLogin'; // adjust path as needed
 
-// TOKEN LIST (***Modify these for your employees***)
-const allowedTokens = [
-  'Super-token-739',   // e.g. Employee 1
-  'Normal-token-139',  // e.g. Employee 2
-  'Middle-token-239',
-  'Low-token-339'
-];
 
 const pageVariants = {
   initial: { opacity: 0, clipPath: 'circle(5% at 50% 50%)' },
@@ -74,23 +68,6 @@ const pageVariants = {
   },
 };
 
-// --- SECRET TOKEN GATE FOR QUERYPANEL ---
-function TokenPanelGate() {
-  const { token } = useParams();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  if (!token) return <Navigate to="/not-found" />;
-  if (!allowedTokens.includes(token)) {
-    return (
-      <div className="h-screen flex flex-col items-center justify-center bg-indigo-50">
-        <p className="text-2xl font-bold mb-4 text-red-600">Invalid or Missing Token</p>
-        <p className="mb-4">Please check your link or contact support.</p>
-      </div>
-    );
-  }
   // Optional: store token to localStorage if you want access/tracking
   localStorage.setItem("employee_token", token);
   return <QueryPanel employeeToken={token} />;
@@ -157,7 +134,8 @@ const MainApp = () => {
               <Route path="/addons" element={<AddOns />} />
               <Route path="/webinars" element={<Webinars />} />
               {/* Secret token QueryPanel route */}
-              <Route path="/querypanel/:token" element={<TokenPanelGate />} />
+              <Route path="/admin" element={<AdminLogin />} /> 
+              <Route path="/querypanel" element={<QueryPanel />} />
               {/* Fallback: unknown routes */}
               <Route path="*" element={<AboutUs />} />
             </Routes>
