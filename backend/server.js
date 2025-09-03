@@ -8,7 +8,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const allowedOrigins = [
-  "https://your-netlify-domain.netlify.app", 
+  "https://rbcomputers123.netlify.app/", 
   "http://localhost:3000",  // development (optional)
   "http://127.0.0.1:3000"
   // Add more if needed
