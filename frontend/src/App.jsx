@@ -157,7 +157,7 @@ const MainApp = () => {
               <Route path="/addons" element={<AddOns />} />
               <Route path="/webinars" element={<Webinars />} />
               {/* Secret token QueryPanel route */}
-              <Route path="/:token" element={<TokenPanelGate />} />
+              <Route path="/querypanel/:token" element={<TokenPanelGate />} />
               {/* Fallback: unknown routes */}
               <Route path="*" element={<AboutUs />} />
             </Routes>
