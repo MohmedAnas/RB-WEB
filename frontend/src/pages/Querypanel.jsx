@@ -429,7 +429,15 @@ const fetchInquiries = async () => {
                   <div className="space-y-2 mb-4">
                     <p className="text-lg font-semibold text-gray-800">{inquiry.name}</p>
                     <p className="text-sm text-gray-500 font-medium">{inquiry.phone}</p>
-                    <p className="text-xs text-gray-400">{new Date(inquiry.submittedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                    <p className="text-xs text-gray-400">
+  {new Date(inquiry.submittedAt).toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit' 
+  })}
+</p>
                     <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getStatusStyle(inquiry.status)}`}>{inquiry.status}</div>
                   </div>
                   {inquiry.assignedTo && (
