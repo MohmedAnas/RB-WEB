@@ -10,7 +10,6 @@ const statusOptions = ["Pending", "In Progress", "Completed", "Schedule", "Dropp
 const enquiryTypeOptions = ["Query", "Demo", "Renewal"];
 const dateOptions = ["Today", "Last Month", "Last 6 Months", "Last Year", "Custom"];
 const API_URL = import.meta.env.VITE_API_URL;
-const navigate = useNavigate();
 
 const addDays = (date, days) => {
   const copy = new Date(date);
