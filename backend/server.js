@@ -106,6 +106,7 @@ app.post('/api/feedback', async (req, res) => {
               <li><strong>Name:</strong> ${name}</li>
               <li><strong>Phone:</strong> ${phone}</li>
               <li><strong>Email:</strong> ${email}</li>
+              <li><strong>Type:</strong> {inquiry.enquiryType || inquiry.enquirytype}</li>
               <li><strong>Enquiry Type:</strong> ${enquiryType}</li>
               <li><strong>Message:</strong> ${description}</li>
           </ul>
@@ -207,3 +208,4 @@ app.get('/api/inquiries', verifyToken, async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
