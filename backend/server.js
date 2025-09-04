@@ -4,10 +4,11 @@ import cors from 'cors';
 import pkg from 'pg';
 import 'dotenv/config';
 const { Pool } = pkg;
+
 const app = express();
 const port = process.env.PORT || 5000;
 
-// ===== DEFINE YOUR TOKENS =========
+// ===== TOKENS =========
 const allowedTokens = [
   "Super-token-739",
   "Normal-token-139",
@@ -15,9 +16,8 @@ const allowedTokens = [
   "Low-token-339"
 ];
 
-// ===== TOKEN CHECK MIDDLEWARE ======
+// ===== TOKEN CHECK =====
 function verifyToken(req, res, next) {
-  // Check custom header, Authorization header, or even query param (as fallback)
   const token =
     req.headers["x-access-token"] ||
     req.headers["authorization"] ||
@@ -28,7 +28,7 @@ function verifyToken(req, res, next) {
   return res.status(401).json({ message: "Unauthorized or Invalid Token" });
 }
 
-// ===== CORS SETUP =========
+// ===== CORS SETUP =====
 const allowedOrigins = [
   "https://rbcomputers123.netlify.app",
   "https://68b8164bde2847c42f6d3cb8--rbcomputers123.netlify.app",
@@ -46,6 +46,7 @@ app.use(cors({
   },
   credentials: true
 }));
+
 app.use(express.json());
 
 // ===== NODEMAILER SETUP =====
@@ -54,10 +55,10 @@ const gmailTransporter = nodemailer.createTransport({
   auth: {
     user: process.env.GMAIL_EMAIL_USER,
     pass: process.env.GMAIL_EMAIL_PASS,
-  },
+  }
 });
 
-// ===== POSTGRESQL SETUP =====
+// ===== POSTGRES SETUP =====
 const pool = new Pool({
   host: process.env.PG_HOST,
   user: process.env.PG_USER,
@@ -66,7 +67,8 @@ const pool = new Pool({
   port: process.env.PG_PORT || 5432,
   ssl: process.env.PG_SSL === 'true' ? { rejectUnauthorized: false } : false,
 });
-// Test PostgreSQL connection on startup
+
+// Test connection
 (async () => {
   try {
     const client = await pool.connect();
@@ -81,14 +83,14 @@ app.get('/', (req, res) => {
   res.status(200).send('R.B. Computers & Software Solution Backend Server (Postgres) is running!');
 });
 
-// Insert feedback (enquiry)
+// ====== FEEDBACK FORM (INSERTION) ======
 app.post('/api/feedback', async (req, res) => {
   const { enquiryType, name, phone, email, description } = req.body;
   let client;
   try {
     client = await pool.connect();
     const result = await client.query(
-      `INSERT INTO inquiries (enquirytype, name, phone, email, description) 
+      `INSERT INTO inquiries (enquirytype, name, phone, email, description)
       VALUES ($1, $2, $3, $4, $5) RETURNING id`,
       [enquiryType, name, phone, email, description]
     );
@@ -100,16 +102,15 @@ app.post('/api/feedback', async (req, res) => {
       to: process.env.RECIPIENT_EMAIL,
       subject: emailSubject,
       html: `
-          <p>You have a new contact form submission:</p>
-          <ul>
-              <li><strong>Ticket ID:</strong> ${ticketId}</li>
-              <li><strong>Name:</strong> ${name}</li>
-              <li><strong>Phone:</strong> ${phone}</li>
-              <li><strong>Email:</strong> ${email}</li>
-              <li><strong>Type:</strong> {inquiry.enquiryType || inquiry.enquirytype}</li>
-              <li><strong>Enquiry Type:</strong> ${enquiryType}</li>
-              <li><strong>Message:</strong> ${description}</li>
-          </ul>
+        <p>You have a new contact form submission:</p>
+        <ul>
+            <li><strong>Ticket ID:</strong> ${ticketId}</li>
+            <li><strong>Name:</strong> ${name}</li>
+            <li><strong>Phone:</strong> ${phone}</li>
+            <li><strong>Email:</strong> ${email}</li>
+            <li><strong>Type:</strong> ${enquiryType}</li>
+            <li><strong>Message:</strong> ${description}</li>
+        </ul>
       `,
     };
     await gmailTransporter.sendMail(mailOptions);
@@ -122,13 +123,13 @@ app.post('/api/feedback', async (req, res) => {
   }
 });
 
-// Schedule meeting: Send customer email (NO DB CHANGE)
+// ====== SCHEDULING MEETING =======
 app.post('/api/schedule-meeting', async (req, res) => {
   const { to, customerName, scheduleDate, scheduleDesc, scheduledBy } = req.body;
   if (!to || !customerName || !scheduleDate || !scheduleDesc) {
     return res.status(400).json({ success: false, message: 'Missing required fields.' });
   }
-  const formattedDate = new Date(scheduleDate).toLocaleString('en-IN', { 
+  const formattedDate = new Date(scheduleDate).toLocaleString('en-IN', {
     timeZone: 'Asia/Kolkata',
     year: 'numeric',
     month: 'long',
@@ -163,8 +164,9 @@ app.post('/api/schedule-meeting', async (req, res) => {
   }
 });
 
-// ====== PROTECTED ENDPOINTS BELOW ==========
-// Update inquiry (status, disposition, assignedTo, resolvedAt)
+// ====== PROTECTED ROUTES BELOW ======
+
+// Update inquiry
 app.put('/api/inquiries/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
   const { status, disposition, assignedTo, resolvedAt } = req.body;
@@ -190,7 +192,8 @@ app.put('/api/inquiries/:id', verifyToken, async (req, res) => {
     if (client) client.release();
   }
 });
-// Read all inquiries (show newest first)
+
+// Get all inquiries
 app.get('/api/inquiries', verifyToken, async (req, res) => {
   let client;
   try {
@@ -205,7 +208,25 @@ app.get('/api/inquiries', verifyToken, async (req, res) => {
   }
 });
 
+// Get a single inquiry by ID
+app.get('/api/inquiries/:id', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  let client;
+  try {
+    client = await pool.connect();
+    const result = await client.query('SELECT * FROM inquiries WHERE id=$1', [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Inquiry not found" });
+    }
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching inquiry" });
+  } finally {
+    if (client) client.release();
+  }
+});
+
+// ===== LISTEN =====
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
