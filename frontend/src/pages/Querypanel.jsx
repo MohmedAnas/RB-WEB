@@ -16,7 +16,7 @@ const addDays = (date, days) => {
   return copy;
 };
 
-const formatDate = d => (d ? new Date(d).toISOString().slice(0, 10) : '');
+ formatDate = d => (d ? new Date(d).toISOString().slice(0, 10) : '');
 
 const InquiryUpdateForm = ({
   inquiry,
@@ -142,6 +142,11 @@ const QueryPanel = ({ employeeToken }) => {
     return timeString.trim().replace(/,$/, '');
   };
 const token = localStorage.getItem('employee_token');
+   useEffect(() => {
+    if (!token) {
+      navigate("/admin");
+    }
+  }, [token, navigate]);
 const fetchInquiries = async () => {
   setIsLoading(true);
   try {
