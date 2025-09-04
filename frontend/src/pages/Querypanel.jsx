@@ -109,6 +109,7 @@ const InquiryUpdateForm = ({
 };
 
 const QueryPanel = ({ employeeToken }) => {
+  const navigate = useNavigate(); 
   const [inquiries, setInquiries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedInquiry, setSelectedInquiry] = useState(null);
