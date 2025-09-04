@@ -212,8 +212,6 @@ const fetchInquiries = async () => {
   };
 
   // ========= Save inquiry update to backend DB ===============
-  const token = localStorage.getItem("employee_token"); // or wherever you store it
-
 const handleUpdate = async (updatedData) => {
   try {
     await fetch(`${API_URL}/api/inquiries/${selectedInquiry.id}`, {
