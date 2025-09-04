@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IconFilter, IconSortAscending, IconSortDescending, IconCheck, IconX, IconArrowDown } from '@tabler/icons-react';
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 
 const employeeList = ["Employee 1", "Employee 2", "Employee 3", "Employee 4"];
 const dispositionOptions = ["Dropped - Price", "Dropped - Requirement Unmatched", "Dropped - Duplicate", "Dropped - Other"];
@@ -9,6 +10,7 @@ const statusOptions = ["Pending", "In Progress", "Completed", "Schedule", "Dropp
 const enquiryTypeOptions = ["Query", "Demo", "Renewal"];
 const dateOptions = ["Today", "Last Month", "Last 6 Months", "Last Year", "Custom"];
 const API_URL = import.meta.env.VITE_API_URL;
+const navigate = useNavigate();
 
 const addDays = (date, days) => {
   const copy = new Date(date);
