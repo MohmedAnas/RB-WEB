@@ -16,7 +16,7 @@ const addDays = (date, days) => {
   return copy;
 };
 
- formatDate = d => (d ? new Date(d).toISOString().slice(0, 10) : '');
+ const formatDate = e => e ? new Date(e).toISOString().slice(0, 10) : "";
 
 const InquiryUpdateForm = ({
   inquiry,
