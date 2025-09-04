@@ -151,11 +151,12 @@ const token = localStorage.getItem('employee_token');
   }, [token, navigate]);
 const fetchInquiries = async () => {
   setIsLoading(true);
+  const token = localStorage.getItem('employee_token'); // <- ensure this is set!
   try {
     const response = await fetch(`${API_URL}/api/inquiries`, {
       method: "GET",
       headers: {
-        "X-Access-Token": token,           // <-- THIS IS THE FIX!
+        "X-Access-Token": "Super-token-739",
         "Content-Type": "application/json"
       }
     });
@@ -169,6 +170,7 @@ const fetchInquiries = async () => {
     setIsLoading(false);
   }
 };
+
 
 
   useEffect(() => { fetchInquiries(); }, []);
@@ -210,27 +212,32 @@ const fetchInquiries = async () => {
   };
 
   // ========= Save inquiry update to backend DB ===============
-  const handleUpdate = async (updatedData) => {
-    try {
-      await fetch(`${API_URL}/api/inquiries/${selectedInquiry.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedData),
-      });
-      setInquiries((prevInquiries) =>
-        prevInquiries.map((inquiry) =>
-          inquiry.id === selectedInquiry.id
-            ? { ...inquiry, ...updatedData }
-            : inquiry
-        )
-      );
-      toast.success("Inquiry updated successfully!");
-      setSelectedInquiry(null);
-      setIsModalOpen(false);
-    } catch (error) {
-      toast.error("Failed to update inquiry in database!");
-    }
-  };
+  const token = localStorage.getItem("employee_token"); // or wherever you store it
+
+const handleUpdate = async (updatedData) => {
+  try {
+    await fetch(`${API_URL}/api/inquiries/${selectedInquiry.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Access-Token": "Super-token-739" // <--- THIS IS REQUIRED!
+      },
+      body: JSON.stringify(updatedData),
+    });
+    setInquiries((prevInquiries) =>
+      prevInquiries.map((inquiry) =>
+        inquiry.id === selectedInquiry.id
+          ? { ...inquiry, ...updatedData }
+          : inquiry
+      )
+    );
+    toast.success("Inquiry updated successfully!");
+    setSelectedInquiry(null);
+    setIsModalOpen(false);
+  } catch (error) {
+    toast.error("Failed to update inquiry in database!");
+  }
+};
 
   const openModal = (inquiry) => {
     setSelectedInquiry(inquiry);
