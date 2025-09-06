@@ -35,6 +35,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000"
 ];
+
 app.use(cors({
   origin: function(origin, callback) {
     if (!origin) return callback(null, true);
@@ -89,12 +90,14 @@ app.post('/api/feedback', async (req, res) => {
   let client;
   try {
     client = await pool.connect();
+    // Assuming enquirytype is the column in your database
     const result = await client.query(
-      `INSERT INTO inquiries (enquiryType, name, phone, email, description)
-      VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+      `INSERT INTO inquiries (enquirytype, name, phone, email, description)
+      VALUES ($1, $2, $3, $4, $5) RETURNING id, submittedat`,
       [enquiryType, name, phone, email, description]
     );
     const ticketId = result.rows[0].id;
+    const submittedAt = result.rows[0].submittedat;
     // Send email
     const emailSubject = `New ${enquiryType} from R.B. Computers Website`;
     const mailOptions = {
@@ -114,7 +117,7 @@ app.post('/api/feedback', async (req, res) => {
       `,
     };
     await gmailTransporter.sendMail(mailOptions);
-    res.status(200).json({ status: 'success', message: 'Request submitted successfully!' });
+    res.status(200).json({ status: 'success', message: 'Request submitted successfully!', ticketId, submittedAt });
   } catch (error) {
     console.error('Submission failed:', error);
     res.status(500).json({ status: 'error', message: `Failed to submit request: ${error.message}` });
@@ -193,13 +196,18 @@ app.put('/api/inquiries/:id', verifyToken, async (req, res) => {
   }
 });
 
-// Get all inquiries
+// Get all inquiries (returns submittedAt in camelCase)
 app.get('/api/inquiries', verifyToken, async (req, res) => {
   let client;
   try {
     client = await pool.connect();
     const result = await client.query('SELECT * FROM inquiries ORDER BY submittedat DESC');
-    res.status(200).json(result.rows);
+    // Map DB rows to camelCase
+    const data = result.rows.map(row => ({
+      ...row,
+      submittedAt: row.submittedat,
+    }));
+    res.status(200).json(data);
   } catch (error) {
     console.error('Failed to fetch inquiries:', error);
     res.status(500).json({ status: 'error', message: 'Failed to fetch inquiries from database.' });
@@ -208,7 +216,7 @@ app.get('/api/inquiries', verifyToken, async (req, res) => {
   }
 });
 
-// Get a single inquiry by ID
+// Get a single inquiry by ID (submittedAt in camelCase)
 app.get('/api/inquiries/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
   let client;
@@ -218,7 +226,12 @@ app.get('/api/inquiries/:id', verifyToken, async (req, res) => {
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "Inquiry not found" });
     }
-    res.status(200).json(result.rows[0]);
+    const row = result.rows[0];
+    // Convert field
+    res.status(200).json({
+      ...row,
+      submittedAt: row.submittedat
+    });
   } catch (error) {
     res.status(500).json({ message: "Error fetching inquiry" });
   } finally {
@@ -230,4 +243,3 @@ app.get('/api/inquiries/:id', verifyToken, async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
