@@ -93,11 +93,11 @@ app.post('/api/feedback', async (req, res) => {
     // Assuming enquirytype is the column in your database
     const result = await client.query(
       `INSERT INTO inquiries (enquiryType, name, phone, email, description)
-      VALUES ($1, $2, $3, $4, $5) RETURNING id, submittedat`,
+      VALUES ($1, $2, $3, $4, $5) RETURNING id, submittedAt`,
       [enquiryType, name, phone, email, description]
     );
     const ticketId = result.rows[0].id;
-    const submittedAt = result.rows[0].submittedat;
+    const submittedAt = result.rows[0].submittedAt;
     // Send email
     const emailSubject = `New ${enquiryType} from R.B. Computers Website`;
     const mailOptions = {
@@ -201,11 +201,11 @@ app.get('/api/inquiries', verifyToken, async (req, res) => {
   let client;
   try {
     client = await pool.connect();
-    const result = await client.query('SELECT * FROM inquiries ORDER BY submittedat DESC');
+    const result = await client.query('SELECT * FROM inquiries ORDER BY submittedAt DESC');
     // Map DB rows to camelCase
     const data = result.rows.map(row => ({
       ...row,
-      submittedAt: row.submittedat,
+      submittedAt: row.submittedAt,
     }));
     res.status(200).json(data);
   } catch (error) {
@@ -230,7 +230,7 @@ app.get('/api/inquiries/:id', verifyToken, async (req, res) => {
     // Convert field
     res.status(200).json({
       ...row,
-      submittedAt: row.submittedat
+      submittedAt: row.submittedAt
     });
   } catch (error) {
     res.status(500).json({ message: "Error fetching inquiry" });
@@ -243,4 +243,5 @@ app.get('/api/inquiries/:id', verifyToken, async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
 
