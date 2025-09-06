@@ -35,7 +35,6 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000"
 ];
-
 app.use(cors({
   origin: function(origin, callback) {
     if (!origin) return callback(null, true);
@@ -47,7 +46,6 @@ app.use(cors({
   },
   credentials: true
 }));
-
 app.use(express.json());
 
 // ===== NODEMAILER SETUP =====
@@ -90,10 +88,10 @@ app.post('/api/feedback', async (req, res) => {
   let client;
   try {
     client = await pool.connect();
-    // Assuming enquirytype is the column in your database
     const result = await client.query(
-      `INSERT INTO inquiries (enquiryType, name, phone, email, description)
-      VALUES ($1, $2, $3, $4, $5) RETURNING id, submittedAt`,
+      `INSERT INTO inquiries (enquirytype, name, phone, email, description)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, "submittedAt"`,
       [enquiryType, name, phone, email, description]
     );
     const ticketId = result.rows[0].id;
@@ -201,13 +199,10 @@ app.get('/api/inquiries', verifyToken, async (req, res) => {
   let client;
   try {
     client = await pool.connect();
-    const result = await client.query('SELECT * FROM inquiries ORDER BY submittedAt DESC');
-    // Map DB rows to camelCase
-    const data = result.rows.map(row => ({
-      ...row,
-      submittedAt: row.submittedAt,
-    }));
-    res.status(200).json(data);
+    // Note: "submittedAt" MUST be quoted if camelCase in the DB
+    const result = await client.query('SELECT * FROM inquiries ORDER BY "submittedAt" DESC');
+    // No mapping needed if using camelCase in db
+    res.status(200).json(result.rows);
   } catch (error) {
     console.error('Failed to fetch inquiries:', error);
     res.status(500).json({ status: 'error', message: 'Failed to fetch inquiries from database.' });
@@ -222,16 +217,12 @@ app.get('/api/inquiries/:id', verifyToken, async (req, res) => {
   let client;
   try {
     client = await pool.connect();
+    // Note: no need to quote here unless you select by that column
     const result = await client.query('SELECT * FROM inquiries WHERE id=$1', [id]);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "Inquiry not found" });
     }
-    const row = result.rows[0];
-    // Convert field
-    res.status(200).json({
-      ...row,
-      submittedAt: row.submittedAt
-    });
+    res.status(200).json(result.rows[0]);
   } catch (error) {
     res.status(500).json({ message: "Error fetching inquiry" });
   } finally {
@@ -243,5 +234,3 @@ app.get('/api/inquiries/:id', verifyToken, async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
-
