@@ -270,7 +270,7 @@ const handleUpdate = async (updatedData) => {
   };
 
   // Apply Enquiry Type/filter logic
-  const matchEnquiryType = inquiry =>
+  const matchenquiryType = inquiry =>
     enquiryTypeFilter === "All" || inquiry.enquiryType === enquiryTypeFilter;
 
   // Date filter
@@ -307,7 +307,7 @@ const handleUpdate = async (updatedData) => {
   const filteredInquiries = inquiries.filter(
     inq =>
       !hideOldCompletedOrDropped(inq) &&
-      matchEnquiryType(inq) &&
+      matchenquiryType(inq) &&
       matchDateFilter(inq)
   ).sort((a, b) => {
     const dateA = new Date(a.submittedAt);
@@ -357,7 +357,7 @@ const handleUpdate = async (updatedData) => {
                           <label className="block text-sm font-medium text-gray-700 mb-2">Enquiry Type</label>
                           <select 
                             value={enquiryTypeFilter} 
-                            onChange={e => setEnquiryTypeFilter(e.target.value)} 
+                            onChange={e => setenquiryTypeFilter(e.target.value)} 
                             className="w-full px-3 py-2 border border-gray-300 rounded-md"
                           >
                             <option value="All">All Types</option>
