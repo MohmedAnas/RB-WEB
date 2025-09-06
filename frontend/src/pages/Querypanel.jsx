@@ -118,7 +118,7 @@ const QueryPanel = ({ employeeToken }) => {
   const [showFilters, setShowFilters] = useState(false);
 
   // ENQUIRY TYPE filter
-  const [enquiryTypeFilter, setEnquiryTypeFilter] = useState('All');
+  const [enquiryTypeFilter, setenquiryTypeFilter] = useState('All');
   // DATE filter, including custom
   const [dateFilter, setDateFilter] = useState('All');
   const [customStart, setCustomStart] = useState('');
