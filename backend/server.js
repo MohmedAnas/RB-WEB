@@ -90,7 +90,7 @@ app.post('/api/feedback', async (req, res) => {
   try {
     client = await pool.connect();
     const result = await client.query(
-      `INSERT INTO inquiries (enquirytype, name, phone, email, description)
+      `INSERT INTO inquiries (enquiryType, name, phone, email, description)
       VALUES ($1, $2, $3, $4, $5) RETURNING id`,
       [enquiryType, name, phone, email, description]
     );
@@ -230,3 +230,4 @@ app.get('/api/inquiries/:id', verifyToken, async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
