@@ -222,13 +222,8 @@ const handleUpdate = async (updatedData) => {
       },
       body: JSON.stringify(updatedData),
     });
-    setInquiries((prevInquiries) =>
-      prevInquiries.map((inquiry) =>
-        inquiry.id === selectedInquiry.id
-          ? { ...inquiry, ...updatedData }
-          : inquiry
-      )
-    );
+       await fetchInquiries(); // makes sure you always show backend truth
+
     toast.success("Inquiry updated successfully!");
     setSelectedInquiry(null);
     setIsModalOpen(false);
