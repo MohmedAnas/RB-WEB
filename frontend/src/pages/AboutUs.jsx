@@ -305,15 +305,15 @@ const AboutUs = () => {
   className="
     fixed top-5 right-24 z-50
     px-7 py-3 rounded-full
-    bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-400
-    text-white font-semibold text-base shadow-md
-    transition
-    ease-in-out
-    hover:scale-105 hover:shadow-xl
-    focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1
-    duration-200
+    bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
+    text-white font-medium tracking-wide
+    shadow-lg shadow-indigo-300/30
+    transition-transform duration-300 ease-out
+    hover:scale-105 hover:shadow-xl hover:shadow-indigo-400/40
+    active:scale-95
+    focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:ring-offset-2
   "
-  style={{ minWidth: '130px', letterSpacing: '0.04em' }}
+  style={{ minWidth: '140px' }}
 >
   Query Panel
 </button>
