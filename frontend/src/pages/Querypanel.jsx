@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { IconFilter, IconSortAscending, IconSortDescending, IconCheck, IconX, IconArrowDown } from '@tabler/icons-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
-import WakeUpScreen from "./WakeUpScreen"; // import your visual feedback screen
+import WakeUpScreen from "../components/WakeUpScreen";
 
 const employeeList = ["Employee 1", "Employee 2", "Employee 3", "Employee 4"];
 const dispositionOptions = ["Dropped - Price", "Dropped - Requirement Unmatched", "Dropped - Duplicate", "Dropped - Other"];
