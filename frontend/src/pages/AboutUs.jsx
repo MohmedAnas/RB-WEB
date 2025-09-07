@@ -300,12 +300,24 @@ const AboutUs = () => {
     <div className="container mx-auto px-4 py-12 space-y-12">
     {/* === QUERY PANEL ADMIN BUTTON, floated top-right, beside hamburger === */}
       <button
-        onClick={() => setShowAdminModal(true)}
-        className="fixed top-5 right-24 z-50 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 transition"
-        title="Admin Query Panel"
-        style={{ minWidth: '48px' }}>
-        Query Panel
-      </button>
+  onClick={() => setShowAdminModal(true)}
+  title="Admin Query Panel"
+  className="
+    fixed top-5 right-24 z-50
+    px-7 py-3 rounded-full
+    bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-400
+    text-white font-semibold text-base shadow-md
+    transition
+    ease-in-out
+    hover:scale-105 hover:shadow-xl
+    focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1
+    duration-200
+  "
+  style={{ minWidth: '130px', letterSpacing: '0.04em' }}
+>
+  Query Panel
+</button>
+
 
       {/* === QUERY PANEL ADMIN MODAL === */}
       {showAdminModal && (
