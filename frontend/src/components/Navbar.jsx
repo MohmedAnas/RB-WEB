@@ -184,18 +184,20 @@ const Navbar = ({ isModalOpen }) => {
   onClick={() => setShowAdminModal(true)}
   title="Admin Query Panel"
   className="
-    px-7 py-3 rounded-full
+    px-4 py-2 sm:px-6 sm:py-2.5 lg:px-7 lg:py-3
+    rounded-full
     bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
-    text-white font-medium tracking-wide
-    shadow-lg shadow-indigo-300/30
+    text-sm sm:text-base font-medium tracking-wide
+    shadow-md shadow-indigo-300/30
     transition-transform duration-300 ease-out
-    hover:scale-105 hover:shadow-xl hover:shadow-indigo-400/40
+    hover:scale-105 hover:shadow-lg hover:shadow-indigo-400/40
     active:scale-95
-    focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:ring-offset-2
+    focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-1
   "
 >
   Query Panel
 </button>
+
 
                                 {/* Hamburger */}
                                 <button
