@@ -30,7 +30,7 @@ const InquiryUpdateForm = ({
   onStatusChange,
 }) => {
   const [disposition, setDisposition] = useState(inquiry.disposition || "");
-  const [assignedTo, setAssignedTo] = useState(inquiry.assignedTo || "");
+  const [assignedTo, setAssignedTo] = useState(inquiry.assignedto || "");
 
   const handleSubmit = () => {
     const updatedData = {
@@ -442,10 +442,10 @@ const handleUpdate = async (updatedData) => {
 </p>
                     <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getStatusStyle(inquiry.status)}`}>{inquiry.status}</div>
                   </div>
-                  {inquiry.assignedTo && (
+                  {inquiry.assignedto && (
                     <div className="mt-3 pt-3 border-t border-gray-100">
                       <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-3 py-1.5 rounded-full text-xs font-medium text-center shadow-sm">
-                        Assigned to {inquiry.assignedTo}
+                        Assigned to {inquiry.assignedto}
                       </div>
                     </div>
                   )}
@@ -458,7 +458,7 @@ const handleUpdate = async (updatedData) => {
                   {inquiry.status === "Completed" && inquiry.resolvedAt && (
                     <div className="mt-3 pt-3 border-t border-gray-100">
                       <p className="text-xs text-gray-500 font-medium">
-                        Completed in {getTimeTaken(inquiry.submittedAt, inquiry.resolvedAt)} by {inquiry.assignedTo}
+                        Completed in {getTimeTaken(inquiry.submittedAt, inquiry.resolvedAt)} by {inquiry.assignedto}
                       </p>
                     </div>
                   )}
@@ -560,7 +560,7 @@ const handleUpdate = async (updatedData) => {
                                       to: selectedInquiry.email,
                                       scheduleDate,
                                       scheduleDesc,
-                                      scheduledBy: selectedInquiry.assignedTo,
+                                      scheduledBy: selectedInquiry.assignedto,
                                       customerName: selectedInquiry.name
                                     }),
                                   });
