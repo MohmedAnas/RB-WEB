@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { IconFilter, IconSortAscending, IconSortDescending, IconCheck, IconX, IconArrowDown } from '@tabler/icons-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
-import WakeUpScreen from "../components/WakeUpScreen";
+import WakeUpScreen from "./WakeUpScreen"; // import your visual feedback screen
 
 const employeeList = ["Employee 1", "Employee 2", "Employee 3", "Employee 4"];
 const dispositionOptions = ["Dropped - Price", "Dropped - Requirement Unmatched", "Dropped - Duplicate", "Dropped - Other"];
@@ -18,7 +18,7 @@ const addDays = (date, days) => {
   return copy;
 };
 
- const formatDate = e => e ? new Date(e).toISOString().slice(0, 10) : "";
+const formatDate = e => e ? new Date(e).toISOString().slice(0, 10) : "";
 
 const InquiryUpdateForm = ({
   inquiry,
@@ -32,7 +32,6 @@ const InquiryUpdateForm = ({
 }) => {
   const [disposition, setDisposition] = useState(inquiry.disposition || "");
   const [assignedTo, setAssignedTo] = useState(inquiry.assignedto || "");
-
   const handleSubmit = () => {
     const updatedData = {
       status,
@@ -46,7 +45,6 @@ const InquiryUpdateForm = ({
     }
     onUpdate(updatedData);
   };
-
   return (
     <>
       <div className="bg-gray-50/80 rounded-xl p-5 space-y-4">
@@ -109,7 +107,7 @@ const InquiryUpdateForm = ({
 };
 
 const QueryPanel = ({ employeeToken }) => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [inquiries, setInquiries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedInquiry, setSelectedInquiry] = useState(null);
@@ -124,14 +122,15 @@ const QueryPanel = ({ employeeToken }) => {
   const [dateFilter, setDateFilter] = useState('All');
   const [customStart, setCustomStart] = useState('');
   const [customEnd, setCustomEnd] = useState('');
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formStatus, setFormStatus] = useState("");
-
   // Schedule-panel states
   const [scheduleDate, setScheduleDate] = useState("");
   const [scheduleDesc, setScheduleDesc] = useState("");
   const [scheduleLoading, setScheduleLoading] = useState(false);
+
+  // === WakeUpScreen Integration ===
+  const [showWakeUpScreen, setShowWakeUpScreen] = useState(false);
 
   const getTimeTaken = (submittedAt, resolvedAt) => {
     const diffInMilliseconds = resolvedAt && submittedAt ? new Date(resolvedAt) - new Date(submittedAt) : 0;
@@ -144,37 +143,44 @@ const QueryPanel = ({ employeeToken }) => {
     if (diffInMinutes % 60 > 0) timeString += `${diffInMinutes % 60} minute${diffInMinutes % 60 > 1 ? 's' : ''}`;
     return timeString.trim().replace(/,$/, '');
   };
-const token = localStorage.getItem('employee_token');
-   useEffect(() => {
+
+  const token = localStorage.getItem('employee_token');
+  useEffect(() => {
     if (!token) {
       navigate("/admin");
     }
   }, [token, navigate]);
-const fetchInquiries = async () => {
-  setIsLoading(true);
-  const token = localStorage.getItem('employee_token'); // <- ensure this is set!
-  try {
-    const response = await fetch(`${API_URL}/api/inquiries`, {
-      method: "GET",
-      headers: {
-        "X-Access-Token": "Super-token-739",
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) throw new Error("Failed to fetch inquiries");
-    const data = await response.json();
-    setInquiries(data);
-  } catch (error) {
-    toast.error("Failed to load inquiries. Please try again later.");
-    setError(error.message);
-  } finally {
-    setIsLoading(false);
-  }
-};
 
-
+  const fetchInquiries = async () => {
+    setIsLoading(true);
+    setShowWakeUpScreen(false);
+    try {
+      const response = await fetch(`${API_URL}/api/inquiries`, {
+        method: "GET",
+        headers: {
+          "X-Access-Token": "Super-token-739",
+          "Content-Type": "application/json"
+        }
+      });
+      if (!response.ok) throw new Error("Failed to fetch inquiries");
+      const data = await response.json();
+      setInquiries(data);
+    } catch (error) {
+      setShowWakeUpScreen(true); // Show wake up/failure screen
+      toast.error("Failed to load inquiries. Please try again later.");
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => { fetchInquiries(); }, []);
+
+  // Retry handler for WakeUpScreen
+  const handleRetry = () => {
+    setShowWakeUpScreen(false);
+    fetchInquiries();
+  };
 
   const showDropReason = (inquiry) => {
     toast.error(`Reason: ${inquiry.disposition}`, {
@@ -213,25 +219,24 @@ const fetchInquiries = async () => {
   };
 
   // ========= Save inquiry update to backend DB ===============
-const handleUpdate = async (updatedData) => {
-  try {
-    await fetch(`${API_URL}/api/inquiries/${selectedInquiry.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Access-Token": "Super-token-739" // <--- THIS IS REQUIRED!
-      },
-      body: JSON.stringify(updatedData),
-    });
-       await fetchInquiries(); // makes sure you always show backend truth
-
-    toast.success("Inquiry updated successfully!");
-    setSelectedInquiry(null);
-    setIsModalOpen(false);
-  } catch (error) {
-    toast.error("Failed to update inquiry in database!");
-  }
-};
+  const handleUpdate = async (updatedData) => {
+    try {
+      await fetch(`${API_URL}/api/inquiries/${selectedInquiry.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Access-Token": "Super-token-739"
+        },
+        body: JSON.stringify(updatedData),
+      });
+      await fetchInquiries();
+      toast.success("Inquiry updated successfully!");
+      setSelectedInquiry(null);
+      setIsModalOpen(false);
+    } catch (error) {
+      toast.error("Failed to update inquiry in database!");
+    }
+  };
 
   const openModal = (inquiry) => {
     setSelectedInquiry(inquiry);
@@ -247,19 +252,18 @@ const handleUpdate = async (updatedData) => {
   };
 
   // --- Filtering logic ---
-  // Hide Completed/Dropped entries after 7 days
   const hideOldCompletedOrDropped = inquiry => {
     const now = new Date();
     if (inquiry.status === "Completed") {
       if (inquiry.resolvedAt) {
         const diff = (now - new Date(inquiry.resolvedAt)) / (1000 * 60 * 60 * 24);
-        return diff > 7; // hide if older than 7 days
+        return diff > 7;
       }
     }
     if (inquiry.status === "Dropped") {
       if (inquiry.submittedAt) {
         const diff = (now - new Date(inquiry.submittedAt)) / (1000 * 60 * 60 * 24);
-        return diff > 7; // hide if older than 7 days
+        return diff > 7;
       }
     }
     return false;
@@ -293,7 +297,7 @@ const handleUpdate = async (updatedData) => {
       const start = new Date(customStart);
       const end = new Date(customEnd);
       submitted.setHours(0, 0, 0, 0);
-      end.setHours(23, 59, 59, 999); // end of day inclusive
+      end.setHours(23, 59, 59, 999);
       return submitted >= start && submitted <= end;
     }
     return true;
@@ -311,7 +315,12 @@ const handleUpdate = async (updatedData) => {
     return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
   });
 
-  // --- Render
+  // --- WakeUpScreen condition ---
+  if (showWakeUpScreen) {
+    return <WakeUpScreen onRetry={handleRetry} />;
+  }
+
+  // --- Render ---
   return (
     <div className="bg-white text-gray-800 min-h-screen">
       <div className="container mx-auto px-6 py-8">
@@ -413,7 +422,7 @@ const handleUpdate = async (updatedData) => {
                 </button>
               </div>
             </div>
-            {/**** Inquiry Cards ****/}
+            {/* Inquiry Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredInquiries.map((inquiry, index) => (
                 <div
@@ -433,14 +442,14 @@ const handleUpdate = async (updatedData) => {
                     <p className="text-lg font-semibold text-gray-800">{inquiry.name}</p>
                     <p className="text-sm text-gray-500 font-medium">{inquiry.phone}</p>
                     <p className="text-xs text-gray-400">
-  {new Date(inquiry.submittedAt).toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric', 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  })}
-</p>
+                      {new Date(inquiry.submittedAt).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
+                    </p>
                     <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getStatusStyle(inquiry.status)}`}>{inquiry.status}</div>
                   </div>
                   {inquiry.assignedto && (
