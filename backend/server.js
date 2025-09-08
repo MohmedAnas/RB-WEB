@@ -84,20 +84,20 @@ app.get('/', (req, res) => {
 
 // ====== FEEDBACK FORM (INSERTION) ======
 app.post('/api/feedback', async (req, res) => {
-  const { enquiryType, name, phone, email, description } = req.body;
+  const { enquiry_type, name, phone, email, description } = req.body;
   let client;
   try {
     client = await pool.connect();
     const result = await client.query(
-      `INSERT INTO inquiries (enquirytype, name, phone, email, description)
+      `INSERT INTO inquiries (enquiry_type, name, phone, email, description)
        VALUES ($1, $2, $3, $4, $5)
        RETURNING id, "submittedAt"`,
-      [enquiryType, name, phone, email, description]
+      [enquiry_type, name, phone, email, description]
     );
     const ticketId = result.rows[0].id;
     const submittedAt = result.rows[0].submittedAt;
     // Send email
-    const emailSubject = `New ${enquiryType} from R.B. Computers Website`;
+    const emailSubject = `New ${enquiry_type} from R.B. Computers Website`;
     const mailOptions = {
       from: `"${name}" <${email}>`,
       to: process.env.RECIPIENT_EMAIL,
@@ -109,7 +109,7 @@ app.post('/api/feedback', async (req, res) => {
             <li><strong>Name:</strong> ${name}</li>
             <li><strong>Phone:</strong> ${phone}</li>
             <li><strong>Email:</strong> ${email}</li>
-            <li><strong>Type:</strong> ${enquiryType}</li>
+            <li><strong>Type:</strong> ${enquiry_type}</li>
             <li><strong>Message:</strong> ${description}</li>
         </ul>
       `,
@@ -234,3 +234,4 @@ app.get('/api/inquiries/:id', verifyToken, async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
