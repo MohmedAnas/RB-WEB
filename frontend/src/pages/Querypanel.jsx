@@ -8,7 +8,7 @@ import WakeUpScreen from "../components/WakeUpScreen";
 const employeeList = ["Employee 1", "Employee 2", "Employee 3", "Employee 4"];
 const dispositionOptions = ["Dropped - Price", "Dropped - Requirement Unmatched", "Dropped - Duplicate", "Dropped - Other"];
 const statusOptions = ["Pending", "In Progress", "Completed", "Schedule", "Dropped"];
-const enquiryTypeOptions = ["Query", "Demo", "Renewal"];
+const enquiry_typeOptions = ["Query", "Demo", "Renewal"];
 const dateOptions = ["Today", "Last Month", "Last 6 Months", "Last Year", "Custom"];
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -117,7 +117,7 @@ const QueryPanel = ({ employeeToken }) => {
   const [showFilters, setShowFilters] = useState(false);
 
   // ENQUIRY TYPE filter
-  const [enquiryTypeFilter, setenquiryTypeFilter] = useState('All');
+  const [enquiry_typeFilter, setenquiry_typeFilter] = useState('All');
   // DATE filter, including custom
   const [dateFilter, setDateFilter] = useState('All');
   const [customStart, setCustomStart] = useState('');
@@ -270,8 +270,8 @@ const QueryPanel = ({ employeeToken }) => {
   };
 
   // Apply Enquiry Type/filter logic
-  const matchenquiryType = inquiry =>
-    enquiryTypeFilter === "All" || inquiry.enquiryType === enquiryTypeFilter;
+  const matchenquiry_type = inquiry =>
+    enquiry_typeFilter === "All" || inquiry.enquiry_type === enquiry_typeFilter;
 
   // Date filter
   const matchDateFilter = inquiry => {
@@ -307,7 +307,7 @@ const QueryPanel = ({ employeeToken }) => {
   const filteredInquiries = inquiries.filter(
     inq =>
       !hideOldCompletedOrDropped(inq) &&
-      matchenquiryType(inq) &&
+      matchenquiry_type(inq) &&
       matchDateFilter(inq)
   ).sort((a, b) => {
     const dateA = new Date(a.submittedAt);
@@ -361,12 +361,12 @@ const QueryPanel = ({ employeeToken }) => {
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">Enquiry Type</label>
                           <select 
-                            value={enquiryTypeFilter} 
-                            onChange={e => setenquiryTypeFilter(e.target.value)} 
+                            value={enquiry_typeFilter} 
+                            onChange={e => setenquiry_typeFilter(e.target.value)} 
                             className="w-full px-3 py-2 border border-gray-300 rounded-md"
                           >
                             <option value="All">All Types</option>
-                            {enquiryTypeOptions.map(type => (
+                            {enquiry_typeOptions.map(type => (
                               <option key={type} value={type}>{type}</option>
                             ))}
                           </select>
@@ -523,7 +523,7 @@ const QueryPanel = ({ employeeToken }) => {
                         </div>
                         <div className="grid grid-cols-[1fr_2fr] gap-x-4 gap-y-2 text-sm">
                           <span className="font-medium text-gray-600">Type:</span>
-                          <span className="font-semibold text-gray-900">{selectedInquiry.enquiryType}</span>
+                          <span className="font-semibold text-gray-900">{selectedInquiry.enquiry_type}</span>
                         </div>
                         <div className="grid grid-cols-[1fr_2fr] gap-x-4 gap-y-2 items-center text-sm">
                           <span className="font-medium text-gray-600">Priority:</span>
