@@ -108,7 +108,7 @@ const MainApp = () => {
               <Route path="/chemical" element={<ChemicalIndustryPage />} />
               <Route path="/bookpublishing" element={<BookPublishingPage />} />
               <Route path="/electricalgoods" element={<ElectricalShopPage />} />
-              <Route path="/fb" element={<FB />} />
+              <Route path="/FB" element={<FB />} />
               <Route path="/pharmacy" element={<Pharmacy />} />
               <Route path="/paint" element={<Paint />} />
               <Route path="/mobile" element={<Mobile />} />
