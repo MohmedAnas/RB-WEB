@@ -8,7 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const Feedback = () => {
     const [formData, setFormData] = useState({
-        enquiryType: 'Query', // Default value for the new dropdown
+        enquiry_type: 'Query', // Default value for the new dropdown
         name: '',
         phone: '',
         email: '',
@@ -136,7 +136,7 @@ const Feedback = () => {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                    enquiryType: formData.enquiryType,
+                    enquiry_type: formData.enquiry_type,
                     name: formData.name,
                     phone: formData.phone,
                     email: formData.email,
@@ -148,7 +148,7 @@ const Feedback = () => {
                 if (response.ok) {
                     setIsSubmitted(true);
                     resolve(result.message);
-                    setFormData({ enquiryType: 'Query', name: '', phone: '', email: '', description: '' });
+                    setFormData({ enquiry_type: 'Query', name: '', phone: '', email: '', description: '' });
                 } else {
                     reject(result.message);
                 }
@@ -221,11 +221,11 @@ const Feedback = () => {
                             </div>
                             <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                                 <div>
-                                    <label htmlFor="enquiryType" className="block text-sm font-medium text-gray-700">Type of Enquiry</label>
+                                    <label htmlFor="enquiry_type" className="block text-sm font-medium text-gray-700">Type of Enquiry</label>
                                     <select
-                                        id="enquiryType"
-                                        name="enquiryType"
-                                        value={formData.enquiryType}
+                                        id="enquiry_type"
+                                        name="enquiry_type"
+                                        value={formData.enquiry_type}
                                         onChange={handleInputChange}
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 bg-white"
                                     >
