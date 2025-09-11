@@ -127,7 +127,7 @@ app.post('/api/feedback', async (req, res) => {
 app.post("/api/free-trial", async (req, res) => {
   try {
     const { phone, email, city, query } = req.body;
-    // Basic validation
+    // Validation
     if (!phone || !email || !city) {
       return res.status(400).json({ message: "Phone, Email, and City are required." });
     }
@@ -137,15 +137,32 @@ app.post("/api/free-trial", async (req, res) => {
     if (!/\S+@\S+\.\S+/.test(email)) {
       return res.status(400).json({ message: "Enter a valid email address." });
     }
-    // Log for now (TODO: DB/email)
-    console.log("📩 Free Trial Request:", { phone, email, city, query });
-    // Success response
+    // Email logic
+    const mailOptions = {
+      from: `"Free Trial Request" <${process.env.GMAIL_EMAIL_USER}>`,
+      to: process.env.RECIPIENT_EMAIL, // Set this in your .env file
+      subject: "New Free Trial Request (Website)",
+      html: `
+        <p>You have received a new free trial request:</p>
+        <ul>
+          <li><strong>Phone:</strong> ${phone}</li>
+          <li><strong>Email:</strong> ${email}</li>
+          <li><strong>City:</strong> ${city}</li>
+          ${query ? `<li><strong>Query:</strong> ${query}</li>` : ""}
+        </ul>
+      `,
+    };
+    // Send the email
+    await gmailTransporter.sendMail(mailOptions);
+    console.log("Free trial request sent & email delivered to admin.");
+
     return res.status(200).json({ message: "Free trial request submitted successfully!" });
   } catch (error) {
     console.error("❌ Error in /api/free-trial:", error);
     return res.status(500).json({ message: "Internal server error. Please try again later." });
   }
 });
+
 
 
 // ====== SCHEDULING MEETING =======
@@ -262,5 +279,6 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
 
 
