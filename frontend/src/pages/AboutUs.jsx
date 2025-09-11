@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import UserCounter from "../components/UserCounter";
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from "react-router-dom";
 import gsap from 'gsap';
@@ -297,6 +298,11 @@ const AboutUs = () => {
     };
 
   return (
+    <div className="relative">
+    {/* Live + Total Users Counter */}
+    <div className="absolute top-4 right-4">
+      <UserCounter />
+    </div>
     <div className="container mx-auto px-4 py-12 space-y-12">
     {/* === QUERY PANEL ADMIN BUTTON, floated top-right, beside hamburger === */}
       <button
