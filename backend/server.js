@@ -124,6 +124,30 @@ app.post('/api/feedback', async (req, res) => {
   }
 });
 
+app.post("/api/free-trial", async (req, res) => {
+  try {
+    const { phone, email, city, query } = req.body;
+    // Basic validation
+    if (!phone || !email || !city) {
+      return res.status(400).json({ message: "Phone, Email, and City are required." });
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      return res.status(400).json({ message: "Phone number must be 10 digits." });
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      return res.status(400).json({ message: "Enter a valid email address." });
+    }
+    // Log for now (TODO: DB/email)
+    console.log("📩 Free Trial Request:", { phone, email, city, query });
+    // Success response
+    return res.status(200).json({ message: "Free trial request submitted successfully!" });
+  } catch (error) {
+    console.error("❌ Error in /api/free-trial:", error);
+    return res.status(500).json({ message: "Internal server error. Please try again later." });
+  }
+});
+
+
 // ====== SCHEDULING MEETING =======
 app.post('/api/schedule-meeting', async (req, res) => {
   const { to, customerName, scheduleDate, scheduleDesc, scheduledBy } = req.body;
@@ -230,8 +254,13 @@ app.get('/api/inquiries/:id', verifyToken, async (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
+
 // ===== LISTEN =====
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
 
