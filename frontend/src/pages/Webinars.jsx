@@ -44,6 +44,41 @@ const allWebinars = [
         link: "https://zoom.us/webinar/register/WN_3uhmlprkTmGqJbw7NJ7vOA#/registration",
         dateTime: "2025-09-26T17:00:00",
         imageUrl: "/Multiple-Warehouse-Management-.jpg"
+    },
+    {
+        title: "From Manual to Digital: Transforming Business with BDEP",
+        description: "Digitize your business journey with BDEP – automate processes, cut errors, and boost productivity.",
+        link: "https://zoom.us/webinar/register/WN_5-yauvtpTKm4Ql2_2kK51w#/registration",
+        dateTime: "2025-10-03T17:00:00",
+        imageUrl: "/BDEP.jpg"
+    },
+    {
+        title: "GST Portal Integration with BUSY – View All Activities Inside BUSY",
+        description: "Stay synced with GST Portal – BUSY lets you view, track & manage all GST activities in one place.",
+        link: "https://zoom.us/webinar/register/WN_UmI_HOkUQJWUqq9webEbJw#/registration",
+        dateTime: "2025-10-10T17:00:00",
+        imageUrl: "/GST.jpg"
+    },
+    {
+        title: "BUSY Mobile App: Access Your Business Data Anytime, Anywhere!",
+        description: "From billing to reports – BUSY Mobile App brings everything you need, right in your pocket.",
+        link: "https://zoom.us/webinar/register/WN_idRAvpuCSOa61J4JlTKItw#/registration",
+        dateTime: "2025-10-17T17:00:00",
+        imageUrl: "/Busy-mobile.jpg"
+    },
+    {
+        title: "Trade Specific – BUSY – Simplifying Bakery & Confectionary Retail",
+        description: "Simplify your bakery operations – BUSY handles inventory, GST billing & customer orders in just a few clicks.",
+        link: "https://zoom.us/webinar/register/WN_5_DHCAUWQt6DCMtKks1oyw#/registration",
+        dateTime: "2025-10-24T17:00:00",
+        imageUrl: "/Busy-Trade Specific.png"
+    },
+    {
+        title: "All-in-One Alerts: BUSY BNS, WhatsApp/SMS, Email & BUSY Agent",
+        description: "Stay informed, stay ahead – with BUSY’s all-in-one alert system across multiple channels.",
+        link: "https://zoom.us/webinar/register/WN_GQjrY97BR_uqpMBsw2LoYA#/registration",
+        dateTime: "2025-10-31T17:00:00",
+        imageUrl: "/Busy-Agent.webp"
     }
 ];
 
