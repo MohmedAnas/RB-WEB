@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     IconMenu2,
     IconX,
@@ -26,7 +26,6 @@ const menuItems = [
     { name: "Feedback", page: "/feedback", icon: <IconMessageCircle size={28} /> },
     { name: "Contact Us", page: "/contactus", icon: <IconPhoneCall size={28} /> },
 ];
-
 const gstMenuItems = {
     col1: [
         { name: "GST Basics", page: "/gstbasics" },
@@ -50,20 +49,17 @@ const gstMenuItems = {
         { name: "TDS", page: "/tds" },
     ],
 };
-
 const menuVariants = { open: { x: 0 }, closed: { x: "100%" } };
 const backdropVariants = { open: { opacity: 1 }, closed: { opacity: 0 } };
 const gstDropdownVariants = {
-    hidden: { opacity: 0, y: -20 },
+    hidden: { opacity: 0, y: 5 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.3, ease: "easeOut", staggerChildren: 0.05 }
+        transition: { duration: 0.2, ease: "easeOut", staggerChildren: 0.03 }
     },
-    exit: { opacity: 0, y: -20, transition: { duration: 0.2, ease: "easeIn" } }
+    exit: { opacity: 0, y: 5, transition: { duration: 0.15, ease: "easeIn" } }
 };
-
-// Allowed tokens for frontend UX check (ensure these match backend for real use)
 const allowedTokens = [
     'Super-token-739',
     'Normal-token-139',
@@ -72,11 +68,8 @@ const allowedTokens = [
 ];
 
 const Navbar = ({ isModalOpen }) => {
-    // Main nav state
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isGstOpen, setIsGstOpen] = useState(false);
-
-    // Admin panel modal state
     const [showAdminModal, setShowAdminModal] = useState(false);
     const [adminToken, setAdminToken] = useState("");
     const [adminError, setAdminError] = useState("");
@@ -86,8 +79,8 @@ const Navbar = ({ isModalOpen }) => {
         setIsMenuOpen(false);
         setIsGstOpen(false);
     };
-
-    const toggleGstMenu = () => setIsGstOpen(!isGstOpen);
+    // For mobile: toggles on click, for desktop: controlled by hover handlers below.
+    const toggleGstMenu = () => setIsGstOpen((v) => !v);
 
     function handleAdminTokenSubmit(e) {
         e.preventDefault();
@@ -118,28 +111,42 @@ const Navbar = ({ isModalOpen }) => {
                         transition={{ duration: 0.3 }}
                     >
                         <div className="container mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
-                            {/* Left - Brand & GST section */}
+                            {/* Left - Brand */}
                             <div className="flex items-center space-x-6">
                                 <Link to="/" className="text-2xl font-extrabold text-gray-900 cursor-pointer">
                                     R.B. <span className="text-orange-500">Computers</span>
                                 </Link>
+                            </div>
+                            {/* Right: Buttons and Hamburger */}
+                            <div className="flex items-center flex-wrap gap-1">
+                                {/* Query Panel */}
+                                <button
+                                    onClick={() => setShowAdminModal(true)}
+                                    title="Admin Query Panel"
+                                    className="px-4 py-2 rounded-lg font-semibold text-neutral-700 bg-transparent hover:underline hover:bg-neutral-100 focus:outline-none transition duration-150"
+                                >
+                                    Query Panel
+                                </button>
+                                {/* GST Hover-Menu */}
                                 <div
-                                    className="relative hidden lg:block"
+                                    className="relative group"
                                     onMouseEnter={() => setIsGstOpen(true)}
                                     onMouseLeave={() => setIsGstOpen(false)}
                                 >
                                     <button
-                                        className={`flex items-center space-x-2 font-semibold text-lg hover:text-indigo-600 transition-colors duration-300
-                                    ${isGstOpen ? 'text-indigo-600' : 'text-gray-700'}`}
+                                        type="button"
+                                        aria-haspopup="menu"
+                                        aria-expanded={isGstOpen}
+                                        onClick={toggleGstMenu}
+                                        className="px-4 py-2 rounded-lg font-semibold text-neutral-700 bg-transparent flex items-center gap-1 hover:underline hover:bg-neutral-100 focus:outline-none transition duration-150"
                                     >
-                                        <span>GST</span>
-                                        <motion.div
-                                            animate={{ rotate: isGstOpen ? 180 : 0 }}
-                                            transition={{ duration: 0.3 }}
-                                        >
-                                            <IconChevronDown size={20} />
-                                        </motion.div>
+                                        GST
+                                        <IconChevronDown
+                                            className={`transition-transform duration-150 ${isGstOpen ? "rotate-180" : ""}`}
+                                            size={18}
+                                        />
                                     </button>
+                                    {/* Dropdown */}
                                     <AnimatePresence>
                                         {isGstOpen && (
                                             <motion.div
@@ -147,22 +154,22 @@ const Navbar = ({ isModalOpen }) => {
                                                 animate="visible"
                                                 exit="exit"
                                                 variants={gstDropdownVariants}
-                                                className="absolute top-full left-0 mt-3 bg-white p-6 rounded-2xl shadow-lg border border-gray-200 z-50 w-[800px] origin-top"
+                                                className="absolute right-0 mt-2 bg-white p-6 rounded-xl shadow-lg border border-gray-100 z-50 w-[325px] md:w-[600px] origin-top"
                                             >
-                                                <div className="grid grid-cols-3 gap-8">
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                                                     {Object.keys(gstMenuItems).map((colKey) => (
                                                         <div key={colKey}>
                                                             <ul className="space-y-2">
                                                                 {gstMenuItems[colKey].map((item, index) => (
                                                                     <motion.li
                                                                         key={item.page}
-                                                                        initial={{ opacity: 0, y: -10 }}
+                                                                        initial={{ opacity: 0, y: 8 }}
                                                                         animate={{ opacity: 1, y: 0 }}
-                                                                        transition={{ duration: 0.2, delay: index * 0.05 }}
-                                                                        className="flex items-center text-gray-700 hover:text-blue-600 transition-colors cursor-pointer"
+                                                                        transition={{ duration: 0.2, delay: index * 0.03 }}
+                                                                        className="flex items-center text-neutral-700 hover:text-orange-600 transition-colors cursor-pointer"
                                                                         onClick={handleLinkClick}
                                                                     >
-                                                                        <Link to={item.page} className="flex items-center">
+                                                                        <Link to={item.page} className="flex items-center w-full">
                                                                             <IconCheck className="h-4 w-4 text-green-500 mr-2" />
                                                                             {item.name}
                                                                         </Link>
@@ -176,29 +183,14 @@ const Navbar = ({ isModalOpen }) => {
                                         )}
                                     </AnimatePresence>
                                 </div>
-                            </div>
-                            {/* Right - Hamburger and Query Panel button */}
-                            <div className="flex items-center space-x-2">
-                                {/* Query Panel Button */}
-                                <button
-  onClick={() => setShowAdminModal(true)}
-  title="Admin Query Panel"
-  className="
-    px-4 py-2 sm:px-6 sm:py-2.5 lg:px-7 lg:py-3
-    rounded-full
-    bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
-    text-sm sm:text-base font-medium tracking-wide
-    shadow-md shadow-indigo-300/30
-    transition-transform duration-300 ease-out
-    hover:scale-105 hover:shadow-lg hover:shadow-indigo-400/40
-    active:scale-95
-    focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-1
-  "
->
-  Query Panel
-</button>
-
-
+                                {/* Download Button */}
+                                <a
+                                    href="/download"
+                                    title="Download"
+                                    className="px-4 py-2 rounded-lg font-semibold text-neutral-700 bg-transparent hover:underline hover:bg-neutral-100 focus:outline-none transition duration-150"
+                                >
+                                    Download
+                                </a>
                                 {/* Hamburger */}
                                 <button
                                     onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -240,8 +232,7 @@ const Navbar = ({ isModalOpen }) => {
                                         <div className="lg:hidden">
                                             <button
                                                 onClick={toggleGstMenu}
-                                                className={`flex items-center w-full text-left p-4 rounded-lg font-semibold text-xl transition-colors duration-300
-                                            ${isGstOpen ? 'bg-gray-100 text-indigo-600' : 'text-gray-700 hover:bg-gray-100'}`}
+                                                className={`flex items-center w-full text-left p-4 rounded-lg font-semibold text-xl bg-transparent text-neutral-700 hover:bg-neutral-100 transition`}
                                             >
                                                 <span>GST</span>
                                                 <motion.div
@@ -259,7 +250,7 @@ const Navbar = ({ isModalOpen }) => {
                                                         animate={{ height: "auto", opacity: 1 }}
                                                         exit={{ height: 0, opacity: 0 }}
                                                         transition={{ duration: 0.3 }}
-                                                        className="overflow-hidden p-4 space-y-2 bg-gray-50 rounded-lg shadow-inner mt-2"
+                                                        className="overflow-hidden p-4 space-y-2 bg-neutral-50 rounded-lg shadow-inner mt-2"
                                                     >
                                                         {Object.values(gstMenuItems).flat().map((item, index) => (
                                                             <motion.li
@@ -267,7 +258,7 @@ const Navbar = ({ isModalOpen }) => {
                                                                 initial={{ opacity: 0, x: 20 }}
                                                                 animate={{ opacity: 1, x: 0 }}
                                                                 transition={{ duration: 0.3, delay: 0.1 + index * 0.05 }}
-                                                                className="flex items-center w-full text-left p-2 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors"
+                                                                className="flex items-center w-full text-left p-2 rounded-lg text-neutral-700 hover:bg-orange-100 transition-colors"
                                                             >
                                                                 <Link to={item.page} className="flex items-center w-full" onClick={handleLinkClick}>
                                                                     <IconCheck className="h-5 w-5 text-green-500 mr-2" />
