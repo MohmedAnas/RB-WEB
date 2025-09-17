@@ -13,6 +13,7 @@ import BusyTutorialVideo from './pages/BusyTutorialVideo.jsx';
 import Payment from './pages/Payment.jsx';
 import Feedback from './pages/Feedback.jsx';
 import FreeTrial from './pages/FreeTrial.jsx';
+import Download from "./pages/download.jsx";
 
 // Industry pages
 import FMCG from './pages/industries/FMCG.jsx';
@@ -98,7 +99,8 @@ const MainApp = () => {
               <Route path="/feedback" element={<Feedback />} />
               <Route path="/freetrial" element={<FreeTrial />} />
               <Route path="/contactus" element={<ContactUs />} />
-              <Route path="/enquiry" element={<Feedback />} /> 
+              <Route path="/enquiry" element={<Feedback />} />
+              <Route path="/download" element={<Download />} />
               {/* Industry Pages */}
               <Route path="/fmcg" element={<FMCG />} />
               <Route path="/garments" element={<Garments />} />
