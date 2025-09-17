@@ -31,6 +31,7 @@ function verifyToken(req, res, next) {
 // ===== CORS SETUP =====
 const allowedOrigins = [
   "https://rbcomputers123.netlify.app",
+  "https://rbcomputers.in",
   "https://68b8164bde2847c42f6d3cb8--rbcomputers123.netlify.app",
   "http://localhost:3000",
   "http://127.0.0.1:3000"
@@ -279,6 +280,7 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
 
 
 
