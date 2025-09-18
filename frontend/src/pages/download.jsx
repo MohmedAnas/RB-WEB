@@ -19,15 +19,18 @@ const Download = () => (
         After download, run the setup and follow the instructions.
       </p>
       <a
-        href={BUSY_SETUP_URL}
-        download
-        className="inline-flex items-center justify-center px-8 py-3 rounded-lg bg-orange-500 text-white font-semibold text-lg shadow hover:bg-orange-600 transition-colors"
-      >
-        <DownloadIcon className="mr-2" size={22} />
-        Download Now
-      </a>
+  href="https://drive.google.com/uc?export=download&id=16sVlXXbZJKKoOOCKK3i6oWC5LyskOQs_"
+  download
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center justify-center px-8 py-3 rounded-lg bg-orange-500 text-white font-semibold text-lg shadow hover:bg-orange-600 transition-colors"
+>
+  <DownloadIcon className="mr-2" size={22} />
+  Download Now
+</a>
+
       <div className="text-sm text-gray-400 mt-4">
-        Version: Busy (Latest) &nbsp;|&nbsp; Size: ≈ 200 MB &nbsp;|&nbsp; © Busy Infotech
+        Version: Busy (Latest) &nbsp;|&nbsp; Size: ≈ 48 MB &nbsp;|&nbsp; © Busy Infotech
       </div>
       <p className="text-xs text-gray-400 mt-1">
         Problems or need help?{" "}
@@ -43,3 +46,4 @@ const Download = () => (
 );
 
 export default Download;
+
