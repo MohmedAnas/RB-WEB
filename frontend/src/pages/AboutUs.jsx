@@ -402,7 +402,7 @@ const AboutUs = () => {
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 0.8, delay: 0.6 }}
                     >
-                        Support: Museb Shaikh, Saad Desai, Rahil Ghanchi
+                        Sales & Support : Museb Shaikh, Saad Desai, Rahil Ghanchi
                     </motion.p>
                     <Link to="/contactus"
                         className="mt-4 inline-block bg-blue-600 text-white font-bold px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors transform hover:scale-105"
