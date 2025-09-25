@@ -17,7 +17,7 @@ const contactGroups = [
     ]
   },
   {
-    group: "Support",
+    group: "Technichal Support",
     contacts: [
       {
         name: "Museb Shaikh",
@@ -28,7 +28,7 @@ const contactGroups = [
     ]
   },
   {
-    group: "Renewal",
+    group: "Product Support",
     contacts: [
       {
         name: "Rahil Ganchi",
